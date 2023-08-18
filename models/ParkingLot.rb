@@ -19,7 +19,8 @@ class ParkingLot
   end
 
   def park(reg_no)
-    Car.is_valid? reg_no
+    is_valid = Car.is_valid? reg_no
+    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
 
     already = !(find_car(@cars, reg_no).nil?)
     if already
@@ -34,10 +35,12 @@ class ParkingLot
     empty_slot.occupied = true
 
     puts "Park your car at slot number: #{empty_slot.slot_no}"
+    empty_slot.slot_no
   end
 
   def un_park(reg_no)
-    Car.is_valid? reg_no
+    is_valid = Car.is_valid? reg_no
+    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
 
     car_idx = find_car(@cars, reg_no)
     raise CarNotFound if car_idx.nil?
@@ -55,6 +58,7 @@ class ParkingLot
     puts "Your invoice is generated with invoice_id: #{@invoices.length}"
 
     print_invoice_by_id(@invoices.length)
+    @invoices.length
   end
 
   def list_cars

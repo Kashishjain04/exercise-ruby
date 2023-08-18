@@ -89,6 +89,8 @@ module Helper
     write_slots_to_file(slots)
     write_cars_to_file(cars)
     write_invoices_to_file(invoices)
+
+    true
   end
 
   def write_slots_to_file(slots = (1..10))

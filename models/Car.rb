@@ -5,13 +5,12 @@ class Car
 
   def self.is_valid?(reg_no)
     pattern = /^([A-Za-z]{2}[0-9]{8})$/
-    match = reg_no.match? pattern
-    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless match
-    true
+    reg_no.match? pattern
   end
 
   def initialize(reg_no: , slot_no: , entry_time: Time.now)
-    Car.is_valid? reg_no
+    is_valid = Car.is_valid? reg_no
+    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
 
     @reg_no = reg_no
     @slot_no = slot_no
