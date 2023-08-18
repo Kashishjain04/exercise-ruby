@@ -1,4 +1,4 @@
-require_relative '../models/ParkingLot'
+require_relative '../models/parking_lot'
 
 RSpec.describe ParkingLot do
   before(:all) do

@@ -1,17 +1,19 @@
 require "json"
-require_relative './Slot'
-require_relative './Car'
-require_relative './Invoice'
-require_relative '../modules/Helper'
+require_relative './slot'
+require_relative './car'
+require_relative './invoice'
+require_relative '../modules/helper'
 require_relative '../utils/exceptions'
 
 class ParkingLot
   include Helper
 
   def initialize
-    @slots = read_slots_from_file
-    @cars = read_cars_from_file
-    @invoices = read_invoices_from_file
+    Helper::safe_file
+
+    @slots = read_item_from_file(:slot)
+    @cars = read_item_from_file(:car)
+    @invoices = read_item_from_file(:invoice)
 
   rescue Errno::ENOENT => e
     $stderr.puts "Caught the exception: #{e}"

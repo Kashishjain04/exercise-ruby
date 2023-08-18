@@ -1,5 +1,5 @@
-require_relative '../models/Car'
-require_relative '../models/ParkingLot'
+require_relative '../models/car'
+require_relative '../models/parking_lot'
 require_relative '../utils/exceptions'
 
 RSpec.describe Car do

@@ -1,5 +1,5 @@
-require_relative '../models/Invoice'
-require_relative '../models/ParkingLot'
+require_relative '../models/invoice'
+require_relative '../models/parking_lot'
 
 RSpec.describe Invoice do
   let(:invoice) { Invoice.new(car_reg_no: "AB12345678", slot_no: 3, entry_time: Time.now - 35, exit_time: Time.now) }

@@ -1,25 +1,24 @@
 require 'optparse'
-require_relative './models/ParkingLot'
+require_relative './models/parking_lot'
 require_relative './utils/exceptions'
 
 class Runner
   def initialize
     @parser = get_opt_parser
     @parser.parse!
+
+  rescue InvalidRegNo => e
+    puts "Error: #{e}"
+
+  rescue NoSlotAvailable => e
+    puts "Error: #{e}"
+
+  rescue CarNotFound => e
+    puts "Error: #{e}"
+
+  rescue InvoiceNotFound => e
+    puts "Error: #{e}"
   end
-
-rescue InvalidRegNo => e
-  puts "Error: #{e}"
-
-rescue NoSlotAvailable => e
-  puts "Error: #{e}"
-
-rescue CarNotFound => e
-  puts "Error: #{e}"
-
-rescue InvoiceNotFound => e
-  puts "Error: #{e}"
-
 end
 
 def get_opt_parser
