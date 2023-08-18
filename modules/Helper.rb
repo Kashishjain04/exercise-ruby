@@ -1,31 +1,37 @@
 require_relative '../utils/exceptions'
 
 module Helper
+  DIRNAME = "#{Dir.pwd}/data"
+  MAX_SLOTS = 10
+  FILE_NAMES = {slot: "slots.json", car: "cars.json", invoice: "invoices.json"}
+
   def self.init_db
-    slots = []
-    (1..10).each do |i|
-      slots << {slot_no: i, occupied: false}
+    Dir.mkdir(DIRNAME) unless File.directory?(DIRNAME)
+
+    temp_slots = []
+    (1..MAX_SLOTS).each do |i|
+      temp_slots << { slot_no: i, occupied: false }
     end
-    slots_file = File.new("data/slots.json", "w+")
-    slots_file.syswrite(slots.to_json)
+    slots_file = File.new("#{DIRNAME}/#{FILE_NAMES[:slot]}", "w+")
+    slots_file.syswrite(temp_slots.to_json)
     slots_file.close
 
-    cars_file = File.new("data/cars.json", "w+")
+    cars_file = File.new("#{DIRNAME}/#{FILE_NAMES[:car]}", "w+")
     cars_file.syswrite([])
     cars_file.close
 
-    invoices_file = File.new("data/invoices.json", "w+")
+    invoices_file = File.new("#{DIRNAME}/#{FILE_NAMES[:invoice]}", "w+")
     invoices_file.syswrite([])
     invoices_file.close
   end
 
   def read_slots_from_file
     slots = []
-    slots_file = File.new("data/slots.json", "r")
+    slots_file = File.new("#{DIRNAME}/#{FILE_NAMES[:slot]}", "r")
     slots_file.each do |line|
       array = JSON.parse(line)
       array.each do | slot |
-        slots << Slot.new(slot_no: slot["slot_no"], occupied: slot["occupied"])
+        slots << Slot.new(slot_no: Integer(slot["slot_no"]), occupied: slot["occupied"])
       end
     end
     slots_file.close
@@ -36,11 +42,11 @@ module Helper
   def read_cars_from_file
     cars = []
 
-    cars_file = File.new("data/cars.json", "r")
+    cars_file = File.new("#{DIRNAME}/#{FILE_NAMES[:car]}", "r")
     cars_file.each do |line|
       array = JSON.parse(line)
       array.each do |car|
-        cars << Car.new(reg_no: car["reg_no"], slot_no: car["slot_no"], entry_time: car["entry_time"])
+        cars << Car.new(reg_no: car["reg_no"], slot_no: Integer(car["slot_no"]), entry_time: Time.new(car["entry_time"]))
       end
     end
     cars_file.close
@@ -51,11 +57,11 @@ module Helper
   def read_invoices_from_file
     invoices = []
 
-    invoices_file = File.new("data/invoices.json", "r")
+    invoices_file = File.new("#{DIRNAME}/#{FILE_NAMES[:invoice]}", "r")
     invoices_file.each do |line|
       array = JSON.parse(line)
       array.each do |invoice|
-        invoices << Invoice.new(car_reg_no: invoice["car_reg_no"], slot_no: invoice["slot_no"], entry_time: invoice["entry_time"], exit_time: invoice["exit_time"], duration: invoice["duration"], amount: invoice["amount"])
+        invoices << Invoice.new(car_reg_no: invoice["car_reg_no"], slot_no: Integer(invoice["slot_no"]), entry_time: Time.new(invoice["entry_time"]), exit_time: Time.new(invoice["exit_time"]), duration: Integer(invoice["duration"]), amount: Integer(invoice["amount"]))
       end
     end
     invoices_file.close
@@ -79,4 +85,39 @@ module Helper
     empty_slot
   end
 
+  def write_to_files(slots, cars, invoices)
+    write_slots_to_file(slots)
+    write_cars_to_file(cars)
+    write_invoices_to_file(invoices)
+  end
+
+  def write_slots_to_file(slots = (1..10))
+    temp_slots = []
+    slots.each do |slot|
+      temp_slots << { slot_no: slot.slot_no, occupied: slot.occupied }
+    end
+    slots_file = File.new("#{DIRNAME}/#{FILE_NAMES[:slot]}", "w+")
+    slots_file.syswrite(temp_slots.to_json)
+    slots_file.close
+  end
+
+  def write_cars_to_file(cars = [])
+    temp_cars = []
+    cars.each do |car|
+      temp_cars << { reg_no: car.reg_no, slot_no: car.slot_no, entry_time: car.entry_time }
+    end
+    cars_file = File.new("#{DIRNAME}/cars.json", "w+")
+    cars_file.syswrite(temp_cars.to_json)
+    cars_file.close
+  end
+
+  def write_invoices_to_file(invoices = [])
+    temp_invoices = []
+    invoices.each do |invoice|
+      temp_invoices << { car_reg_no: invoice.car_reg_no, slot_no: invoice.slot_no, entry_time: invoice.entry_time, exit_time: invoice.exit_time, duration: invoice.duration, amount: invoice.amount }
+    end
+    invoices_file = File.new("#{DIRNAME}/invoices.json", "w+")
+    invoices_file.syswrite(temp_invoices.to_json)
+    invoices_file.close
+  end
 end

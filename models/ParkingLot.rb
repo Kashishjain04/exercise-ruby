@@ -12,9 +12,15 @@ class ParkingLot
     @slots = read_slots_from_file
     @cars = read_cars_from_file
     @invoices = read_invoices_from_file
+
+  rescue Errno::ENOENT => e
+    $stderr.puts "Caught the exception: #{e}"
+    exit -1
   end
 
   def park(reg_no)
+    Car.is_valid? reg_no
+
     already = !(find_car(@cars, reg_no).nil?)
     if already
       puts "Car already parked"
@@ -28,15 +34,10 @@ class ParkingLot
     empty_slot.occupied = true
 
     puts "Park your car at slot number: #{empty_slot.slot_no}"
-
-    rescue InvalidRegNo => e
-      puts "Error: #{e}"
   end
 
   def un_park(reg_no)
-    # invoice_idx = find_invoice_by_reg_no(@invoices, reg_no)
-    # raise CarNotFound if invoice_idx.nil?
-    # details = @invoices[invoice_idx]
+    Car.is_valid? reg_no
 
     car_idx = find_car(@cars, reg_no)
     raise CarNotFound if car_idx.nil?
@@ -65,19 +66,17 @@ class ParkingLot
   end
 
   def print_invoice_by_id(invoice_id)
-    raise InvoiceNotFound if invoice_id > @invoices.length
+    raise InvoiceNotFound if invoice_id > @invoices.length or invoice_id <= 0
 
     @invoices[invoice_id-1].print
   end
 
+  def write_to_files
+    super(@slots, @cars, @invoices)
+  end
+
 end
 
-# ParkingLot.init_db
-
-parking_lot = ParkingLot.new
-parking_lot.park("HR12345678")
-parking_lot.park("HR12345679")
-parking_lot.list_cars
-parking_lot.un_park("HR12345678")
-parking_lot.un_park("HR12345679")
-parking_lot.print_all_invoices
+def ParkingLot.init_db
+  Helper.init_db
+end

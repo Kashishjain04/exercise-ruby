@@ -28,7 +28,7 @@ class Invoice
 ------------------------------------------------
 Your Invoice
       Car Registration Number: #{@car_reg_no}
-      Duration: #{@duration} seconds
+      Duration: #{ @duration < 60 ? @duration.to_s + " seconds" : (@duration/60.0).round(2).to_s + " minutes" }
       Entry: #{@entry_time}
       Exit: #{@exit_time}
       Amount: #{@amount}
