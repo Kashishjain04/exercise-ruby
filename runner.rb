@@ -7,6 +7,19 @@ class Runner
     @parser = get_opt_parser
     @parser.parse!
   end
+
+rescue InvalidRegNo => e
+  puts "Error: #{e}"
+
+rescue NoSlotAvailable => e
+  puts "Error: #{e}"
+
+rescue CarNotFound => e
+  puts "Error: #{e}"
+
+rescue InvoiceNotFound => e
+  puts "Error: #{e}"
+
 end
 
 def get_opt_parser
