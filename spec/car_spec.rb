@@ -37,6 +37,8 @@ RSpec.describe Car do
 
   it "should print list of parked cars" do
     parking_lot = ParkingLot.new
+    parking_lot.park("AB12345678")
+
     expect(parking_lot.list_cars).to be_instance_of(Array)
   end
 end
