@@ -1,6 +1,10 @@
 require_relative '../utils/exceptions'
+require_relative '../helpers/model_helper'
 
 class Car
+  extend ModelHelper
+
+  @@filename = "cars.json"
   attr_reader :reg_no, :slot_no, :entry_time
 
   def self.is_valid?(reg_no)
@@ -25,5 +29,17 @@ Car Details
     Parking Slot: #{@slot_no}
 -----------------------------------------
 END
+  end
+
+  def self.create_object_from_hash(data)
+    Car.new(reg_no: data["reg_no"], slot_no: Integer(data["slot_no"]), entry_time: Time.new(data["entry_time"]))
+  end
+
+  def create_hash
+    { reg_no: @reg_no, slot_no: @slot_no, entry_time: @entry_time }
+  end
+
+  def self.init_file
+    self.write_data_to_file([])
   end
 end

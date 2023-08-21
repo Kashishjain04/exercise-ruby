@@ -2,7 +2,7 @@ require "json"
 require_relative './slot'
 require_relative './car'
 require_relative './invoice'
-require_relative '../modules/helper'
+require_relative '../helpers/helper'
 require_relative '../utils/exceptions'
 
 class ParkingLot
@@ -11,13 +11,17 @@ class ParkingLot
   def initialize
     Helper::safe_file
 
-    @slots = read_item_from_file(:slot)
-    @cars = read_item_from_file(:car)
-    @invoices = read_item_from_file(:invoice)
+    @slots = Slot.read_data_from_file
+    @cars = Car.read_data_from_file
+    @invoices = Invoice.read_data_from_file
 
   rescue Errno::ENOENT => e
     $stderr.puts "Caught the exception: #{e}"
     exit -1
+  end
+
+  def self.init_db
+    Helper.init_db
   end
 
   def park(reg_no)
@@ -25,6 +29,7 @@ class ParkingLot
     raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
 
     already = !(find_car(@cars, reg_no).nil?)
+
     if already
       puts "Car already parked"
       exit(1)
@@ -64,25 +69,37 @@ class ParkingLot
   end
 
   def list_cars
-    @cars.each{ |item| item.print }
+    if @cars.length == 0
+      puts <<END
+-----------------------------------------
+No car parked at the moment.
+-----------------------------------------
+END
+    else
+      @cars.each { |item| item.print }
+    end
   end
 
   def print_all_invoices
-    @invoices.each{ |item| item.print }
+    if @invoices.length == 0
+      puts <<END
+-----------------------------------------
+No invoice generated till now.
+-----------------------------------------
+END
+    else
+      @invoices.each { |item| item.print }
+    end
   end
 
   def print_invoice_by_id(invoice_id)
     raise InvoiceNotFound if invoice_id > @invoices.length or invoice_id <= 0
 
-    @invoices[invoice_id-1].print
+    @invoices[invoice_id - 1].print
   end
 
   def write_to_files
     super(@slots, @cars, @invoices)
   end
 
-end
-
-def ParkingLot.init_db
-  Helper.init_db
 end
