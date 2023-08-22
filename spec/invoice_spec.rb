@@ -13,6 +13,10 @@ RSpec.describe Invoice do
   end
 
   it "should print all invoices" do
-    expect(ParkingLot.new.print_all_invoices).to be_instance_of(Array)
+    parking_lot = ParkingLot.new
+    parking_lot.park("AB12345678")
+    parking_lot.unpark("AB12345678")
+
+    expect(parking_lot.print_all_invoices).to be_instance_of(Array)
   end
 end

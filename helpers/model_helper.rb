@@ -3,7 +3,9 @@ require_relative './helper'
 
 module ModelHelper
 
-  def write_data_to_file(data)
+  def write_data_to_file(data = nil)
+    data ||= self.class_variable_get(:@@collection)
+
     arr = []
     data.each do |item|
       arr << item.create_hash
@@ -25,6 +27,7 @@ module ModelHelper
     end
 
     file.close
+    self.class_variable_set(:@@collection, arr)
     arr
   end
 

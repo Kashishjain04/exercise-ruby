@@ -10,6 +10,12 @@ class Runner
   rescue InvalidRegNo => e
     puts "Error: #{e}"
 
+  rescue CarAlreadyParked => e
+    puts "Error: #{e}"
+
+  rescue InvalidSlotId => e
+    puts "Error: #{e}"
+
   rescue NoSlotAvailable => e
     puts "Error: #{e}"
 
@@ -36,7 +42,7 @@ def get_opt_parser
 
     opts.on("-u reg_no", "--unpark", "Find and unpark your car") do |reg_no|
       parking_lot = ParkingLot.new
-      parking_lot.un_park(reg_no.upcase)
+      parking_lot.unpark(reg_no.upcase)
       parking_lot.write_to_files
     end
 

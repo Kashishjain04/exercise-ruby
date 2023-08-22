@@ -4,21 +4,42 @@ require_relative '../helpers/model_helper'
 class Slot
   extend ModelHelper
 
+  @@collection = []
   @@filename = "slots.json"
   @@max_slots = 10
-  attr_accessor :occupied, :slot_no
+  attr_accessor :car_no, :slot_no
 
-  def initialize(slot_no: , occupied: false)
+  def initialize(slot_no:, car_no: nil)
     @slot_no = slot_no
-    @occupied = occupied
+    @car_no = car_no
+  end
+
+  def self.empty_slot
+    empty_slot = @@collection.find { |slot| slot.car_no.nil? }
+    raise NoSlotAvailable, "Empty slot not available" if empty_slot.nil?
+    empty_slot
+  end
+
+  def self.find(&comp)
+    slot = @@collection.find { comp }
+    raise InvalidSlotId if slot.nil?
+    slot
+  end
+
+  def park(car)
+    self.car_no = car.reg_no
+  end
+
+  def unpark
+    self.car_no = nil
   end
 
   def create_hash
-    { slot_no: @slot_no, occupied: @occupied }
+    { slot_no: @slot_no, car_no: @car_no }
   end
 
   def self.create_object_from_hash(data)
-    Slot.new(slot_no: Integer(data["slot_no"]), occupied: data["occupied"])
+    Slot.new(slot_no: Integer(data["slot_no"]), car_no: data["car_no"])
   end
 
   def self.init_file

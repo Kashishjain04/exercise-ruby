@@ -10,6 +10,17 @@ class NoSlotAvailable < StandardError
   end
 end
 
+class InvalidSlotId < StandardError
+  def initialize(msg = nil)
+    super("Invalid slot Id")
+  end
+end
+class CarAlreadyParked < StandardError
+  def initialize(msg = nil)
+    super("Car already parked")
+  end
+end
+
 class CarNotFound < StandardError
   def initialize(msg = nil)
     super("Car not found")

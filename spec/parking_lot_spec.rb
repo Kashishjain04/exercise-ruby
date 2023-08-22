@@ -16,7 +16,7 @@ RSpec.describe ParkingLot do
   end
 
   it "should unpark a car" do
-    unparked = @parking_lot.un_park("AB12345678")
+    unparked = @parking_lot.unpark("AB12345678")
     # returns invoice_id
     expect(unparked).to be_instance_of(Integer)
   end
