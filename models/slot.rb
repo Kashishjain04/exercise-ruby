@@ -36,7 +36,7 @@ class Slot
   end
 
   def to_hash
-    { slot_no: @slot_no, car_no: @car_no, active: @active }
+    { "slot_no"=>@slot_no, "car_no"=>@car_no, "active"=>@active }
   end
 
   def self.initialize_from_hash(data)

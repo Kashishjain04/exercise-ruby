@@ -47,12 +47,12 @@ class Invoice
 
   def to_hash
     {
-      car_reg_no: @car_reg_no,
-      slot_no: @slot_no,
-      entry_time: @entry_time,
-      exit_time: @exit_time,
-      duration: @duration,
-      amount: @amount
+      "car_reg_no"=>@car_reg_no,
+      "slot_no"=>@slot_no,
+      "entry_time"=>@entry_time.to_s,
+      "exit_time"=>@exit_time.to_s,
+      "duration"=>@duration,
+      "amount"=>@amount
     }
   end
 

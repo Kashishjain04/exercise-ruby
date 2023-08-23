@@ -4,6 +4,7 @@ require "time"
 
 class Car
   extend ModelHelper
+
   @@collection = []
   @@filename = "cars.json"
   attr_reader :reg_no, :entry_time
@@ -17,7 +18,7 @@ class Car
     true
   end
 
-  def initialize(reg_no:, slot_no: nil, entry_time: Time.now)
+  def initialize(reg_no:, slot_no: nil, entry_time: Time.now.round)
     Car.is_valid? reg_no
 
     already = Car.already?(reg_no)
@@ -53,13 +54,13 @@ class Car
   def self.initialize_from_hash(data)
     Car.new(
       reg_no: data["reg_no"],
-      slot_no: Integer(data["slot_no"]),
+      slot_no: data["slot_no"].nil? ? nil : Integer(data["slot_no"]),
       entry_time: Time.parse(data["entry_time"])
     )
   end
 
   def to_hash
-    { reg_no: @reg_no, slot_no: @slot_no, entry_time: @entry_time }
+    { "reg_no"=>@reg_no, "slot_no"=>@slot_no, "entry_time"=>@entry_time.to_s }
   end
 
   def self.init_file

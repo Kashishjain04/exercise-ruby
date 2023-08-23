@@ -44,7 +44,7 @@ class ParkingLot
       car_reg_no: reg_no,
       slot_no: slot.slot_no,
       entry_time: car.entry_time,
-      exit_time: Time.now
+      exit_time: Time.now.round
     )
 
     slot.unpark
