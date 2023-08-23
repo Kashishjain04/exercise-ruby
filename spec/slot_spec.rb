@@ -30,6 +30,12 @@ describe Slot do
               active: slot.active
             )
     end
+
+    it "increase slots in the parking lot" do
+      initial_slots = Slot.class_variable_get(:@@collection).length
+      Slot.increase_slots(4)
+      expect(Slot.class_variable_get(:@@collection).length).to be(initial_slots + 4)
+    end
   end
 
   context "does not" do

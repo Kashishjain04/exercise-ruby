@@ -65,4 +65,14 @@ class Slot
     raise SlotActive, "Slot already active" if @active
     @active = true
   end
+
+  def self.increase_slots(increment)
+    ctr = @@collection.length
+    new_slots = (1..increment).map do
+      ctr+=1
+      Slot.new(slot_no: ctr)
+    end
+
+    (@@collection << new_slots).flatten!
+  end
 end

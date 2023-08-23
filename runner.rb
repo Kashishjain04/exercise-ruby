@@ -72,6 +72,12 @@ def get_opt_parser
       parking_lot.activate_slot(Integer(slot_no))
       parking_lot.write_to_files
     end
+
+    opts.on("-s increment", "Add slots") do |increment|
+      parking_lot = ParkingLot.new
+      parking_lot.increase_slots(Integer(increment))
+      parking_lot.write_to_files
+    end
   end
 end
 

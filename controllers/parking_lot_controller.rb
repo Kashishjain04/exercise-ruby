@@ -79,4 +79,9 @@ class ParkingLot
     slot.mark_active
     SlotView.active(true)
   end
+
+  def increase_slots(increment)
+    Slot.increase_slots(increment)
+    SlotView.added(increment)
+  end
 end

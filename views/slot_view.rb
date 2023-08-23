@@ -6,4 +6,12 @@ class SlotView
 -------------------------------
 END
   end
+
+  def self.added(increment)
+    puts <<END
+--------------------------------
+ #{increment} Slots added successfully
+--------------------------------
+END
+  end
 end
