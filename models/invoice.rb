@@ -7,15 +7,18 @@ class Invoice
   PRICE_MAPPING = { ..10 => 100, 11..30 => 200, 31..60 => 300, 61.. => 500 }
   @@collection = []
   @@filename = "invoices.json"
-  attr_accessor :car_reg_no, :slot_no, :entry_time, :exit_time, :duration, :amount, :invoice_id
+  attr_accessor :car_reg_no, :car_phone_no, :slot_no, :entry_time, :exit_time, :duration, :amount, :invoice_id
 
-  def initialize(car_reg_no:, slot_no:, entry_time:, exit_time:, duration: nil, amount: nil)
+  def initialize(
+    car_reg_no:, car_phone_no:, slot_no:, entry_time:, exit_time:, duration: nil, amount: nil
+  )
     @car_reg_no = car_reg_no
+    @car_phone_no = car_phone_no
     @slot_no = slot_no
     @entry_time = entry_time
     @exit_time = exit_time
-    @duration = Integer(exit_time - entry_time)
-    @amount = calc_amount
+    @duration = duration || Integer(exit_time - entry_time)
+    @amount = amount || calc_amount
     @invoice_id = @@collection.length + 1
 
     @@collection << self
@@ -37,6 +40,7 @@ class Invoice
   def self.initialize_from_hash(data)
     Invoice.new(
       car_reg_no: data["car_reg_no"],
+      car_phone_no: data["car_phone_no"],
       slot_no: Integer(data["slot_no"]),
       entry_time: Time.parse(data["entry_time"]),
       exit_time: Time.parse(data["exit_time"]),
@@ -48,6 +52,7 @@ class Invoice
   def to_hash
     {
       "car_reg_no"=>@car_reg_no,
+      "car_phone_no"=>@car_phone_no,
       "slot_no"=>@slot_no,
       "entry_time"=>@entry_time.to_s,
       "exit_time"=>@exit_time.to_s,

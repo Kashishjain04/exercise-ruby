@@ -15,7 +15,8 @@ END
     puts <<END
 -----------------------------------------
 Car Details
-    Registration Number: #{car.reg_no}
+    Registration Number: #{car.reg_no || "N/A"} 
+    Phone Number: #{car.phone || "N/A"}
     Parking Slot: #{car.slot_no}
 -----------------------------------------
 END

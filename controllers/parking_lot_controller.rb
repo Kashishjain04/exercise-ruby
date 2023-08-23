@@ -7,6 +7,7 @@ require_relative "../utils/exceptions"
 require_relative "../views/car_view"
 require_relative "../views/invoice_view"
 require_relative "../views/slot_view"
+require_relative "../views/parking_lot_view"
 
 class ParkingLot
   include Helper
@@ -23,25 +24,24 @@ class ParkingLot
     Helper.init_db
   end
 
-  def park(reg_no)
-    new_car = Car.new(reg_no: reg_no)
+  def park(id)
+    new_car = Car.new(id: id)
     empty_slot = Slot.empty_slot
 
     new_car.park(empty_slot.slot_no)
-    empty_slot.park(new_car)
+    empty_slot.park(id)
 
-    puts "Park your car at slot number: #{empty_slot.slot_no}"
+    ParkingLotView.park(empty_slot.slot_no)
     true
   end
 
-  def unpark(reg_no)
-    car = Car.find(reg_no)
+  def unpark(id)
+    car = Car.find(id)
     slot = Slot.find(car.slot_no)
 
-    puts "Take your car from slot number: #{car.slot_no}"
-
     invoice = Invoice.new(
-      car_reg_no: reg_no,
+      car_reg_no: car.reg_no,
+      car_phone_no: car.phone,
       slot_no: slot.slot_no,
       entry_time: car.entry_time,
       exit_time: Time.now.round
@@ -50,8 +50,7 @@ class ParkingLot
     slot.unpark
     car.unpark
 
-    puts "Your invoice is generated with invoice_id: #{invoice.invoice_id}"
-
+    ParkingLotView.unpark(car.slot_no, invoice.invoice_id)
     print_invoice_by_id(invoice.invoice_id)
     true
   end

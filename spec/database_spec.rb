@@ -13,7 +13,7 @@ describe "#from database" do
     end
 
     it "writes dummy data" do
-      dummy_cars = [Car.new(reg_no: "AB00000000"), Car.new(reg_no: "AB99999999")]
+      dummy_cars = [Car.new(id: "AB00000000"), Car.new(id: "9999999999")]
       dummy_hash = dummy_cars.map(&:to_hash)
 
       expect(Car).to receive(:write_to_disk).with(dummy_hash, "cars.json")
@@ -36,12 +36,14 @@ describe "#from database" do
       dummy_invoices = [
         Invoice.new(
           car_reg_no: "AB12345678",
+          car_phone_no: nil,
           slot_no: 3,
           entry_time: Time.now.round - 35,
           exit_time: Time.now.round
         ),
         Invoice.new(
-          car_reg_no: "AB12345679",
+          car_reg_no: nil,
+          car_phone_no: "9999999999",
           slot_no: 5,
           entry_time: Time.now.round - 120,
           exit_time: Time.now.round

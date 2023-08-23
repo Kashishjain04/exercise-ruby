@@ -2,8 +2,13 @@ require_relative './spec_helper'
 
 RSpec.describe ParkingLot do
   context "does" do
-    it "park a valid car" do
+    it "park a valid car with registration number" do
       parked = ParkingLot.new.park("AB12345678")
+      expect(parked).to be_truthy
+    end
+
+    it "park a valid car with phone number" do
+      parked = ParkingLot.new.park("9876543210")
       expect(parked).to be_truthy
     end
 
@@ -15,6 +20,7 @@ RSpec.describe ParkingLot do
       expect(unparked).to be_truthy
     end
   end
+
   context "does not" do
     it "accept already parked car" do
       parking_lot = ParkingLot.new

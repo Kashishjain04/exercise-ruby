@@ -7,16 +7,16 @@ class Slot
   @@collection = []
   @@filename = "slots.json"
   @@max_slots = 10
-  attr_accessor :car_no, :slot_no, :active
+  attr_accessor :car_id, :slot_no, :active
 
-  def initialize(slot_no:, car_no: nil, active: true)
+  def initialize(slot_no:, car_id: nil, active: true)
     @slot_no = slot_no
-    @car_no = car_no
+    @car_id = car_id
     @active = active
   end
 
   def self.empty_slot
-    empty_slot = @@collection.find { |slot| slot.car_no.nil? && slot.active }
+    empty_slot = @@collection.find { |slot| slot.car_id.nil? && slot.active }
     raise NoSlotAvailable, "Empty slot not available" if empty_slot.nil?
     empty_slot
   end
@@ -27,22 +27,22 @@ class Slot
     slot
   end
 
-  def park(car)
-    self.car_no = car.reg_no
+  def park(car_id)
+    self.car_id = car_id
   end
 
   def unpark
-    self.car_no = nil
+    self.car_id = nil
   end
 
   def to_hash
-    { "slot_no"=>@slot_no, "car_no"=>@car_no, "active"=>@active }
+    { "slot_no"=>@slot_no, "car_id"=>@car_id, "active"=>@active }
   end
 
   def self.initialize_from_hash(data)
     Slot.new(
       slot_no: Integer(data["slot_no"]),
-      car_no: data["car_no"],
+      car_id: data["car_id"],
       active: data["active"]
     )
   end

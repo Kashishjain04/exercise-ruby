@@ -4,6 +4,7 @@ RSpec.describe Invoice do
   let!(:invoice) {
     Invoice.new(
       car_reg_no: "AB12345678",
+      car_phone_no: nil,
       slot_no: 3,
       entry_time: Time.now.round - 35,
       exit_time: Time.now.round

@@ -15,7 +15,8 @@ END
     puts <<-END
 ------------------------------------------------
 Your Invoice: ##{invoice.invoice_id}
-      Car Registration Number: #{invoice.car_reg_no}
+      Car Registration Number: #{invoice.car_reg_no || "N/A"}
+      Owner Phone Number: #{invoice.car_phone_no || "N/A"}
       Duration: #{
       invoice.duration < 60 ?
         self.duration_in_seconds(invoice.duration) :
