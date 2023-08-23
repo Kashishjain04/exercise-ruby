@@ -7,9 +7,17 @@ describe "#from database" do
       expect(Car.read_data).to be_instance_of(Array)
     end
 
-    it "writes data" do
+    it "writes empty data" do
       expect(Car).to receive(:write_to_disk).with([], "cars.json")
       Car.write_data([])
+    end
+
+    it "writes dummy data" do
+      dummy_cars = [Car.new(reg_no: "AB12345678"), Car.new(reg_no: "AB12345679")]
+      dummy_hash = dummy_cars.map(&:to_hash)
+
+      expect(Car).to receive(:write_to_disk).with(dummy_hash, "cars.json")
+      Car.write_data(dummy_cars)
     end
   end
 
@@ -19,9 +27,30 @@ describe "#from database" do
       expect(Invoice.read_data).to be_instance_of(Array)
     end
 
-    it "writes data" do
+    it "writes empty data" do
       expect(Invoice).to receive(:write_to_disk).with([], "invoices.json")
       Invoice.write_data([])
+    end
+
+    it "writes dummy data" do
+      dummy_invoices = [
+        Invoice.new(
+          car_reg_no: "AB12345678",
+          slot_no: 3,
+          entry_time: Time.now - 35,
+          exit_time: Time.now
+        ),
+        Invoice.new(
+          car_reg_no: "AB12345679",
+          slot_no: 5,
+          entry_time: Time.now - 120,
+          exit_time: Time.now
+        )
+      ]
+      dummy_hash = dummy_invoices.map(&:to_hash)
+
+      expect(Car).to receive(:write_to_disk).with(dummy_hash, "cars.json")
+      Car.write_data(dummy_invoices)
     end
   end
 
@@ -31,9 +60,17 @@ describe "#from database" do
       expect(Slot.read_data).to be_instance_of(Array)
     end
 
-    it "writes data" do
+    it "writes empty data" do
       expect(Slot).to receive(:write_to_disk).with([], "slots.json")
       Slot.write_data([])
+    end
+
+    it "writes dummy data" do
+      dummy_slots = [Slot.new(slot_no: 2), Slot.new(slot_no: 4)]
+      dummy_hash = dummy_slots.map(&:to_hash)
+
+      expect(Car).to receive(:write_to_disk).with(dummy_hash, "cars.json")
+      Car.write_data(dummy_slots)
     end
   end
 end
