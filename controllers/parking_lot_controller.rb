@@ -40,7 +40,12 @@ class ParkingLot
 
     puts "Take your car from slot number: #{car.slot_no}"
 
-    invoice = Invoice.new(car_reg_no: reg_no, slot_no: slot.slot_no, entry_time: car.entry_time, exit_time: Time.now)
+    invoice = Invoice.new(
+      car_reg_no: reg_no,
+      slot_no: slot.slot_no,
+      entry_time: car.entry_time,
+      exit_time: Time.now
+    )
 
     slot.unpark
     car.unpark

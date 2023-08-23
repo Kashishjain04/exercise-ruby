@@ -40,7 +40,11 @@ class Slot
   end
 
   def self.initialize_from_hash(data)
-    Slot.new(slot_no: Integer(data["slot_no"]), car_no: data["car_no"], active: data["active"])
+    Slot.new(
+      slot_no: Integer(data["slot_no"]),
+      car_no: data["car_no"],
+      active: data["active"]
+    )
   end
 
   def self.init_file

@@ -35,11 +35,25 @@ class Invoice
   end
 
   def self.initialize_from_hash(data)
-    Invoice.new(car_reg_no: data["car_reg_no"], slot_no: Integer(data["slot_no"]), entry_time: Time.parse(data["entry_time"]), exit_time: Time.parse(data["exit_time"]), duration: Integer(data["duration"]), amount: Integer(data["amount"]))
+    Invoice.new(
+      car_reg_no: data["car_reg_no"],
+      slot_no: Integer(data["slot_no"]),
+      entry_time: Time.parse(data["entry_time"]),
+      exit_time: Time.parse(data["exit_time"]),
+      duration: Integer(data["duration"]),
+      amount: Integer(data["amount"])
+    )
   end
 
   def to_hash
-    { car_reg_no: @car_reg_no, slot_no: @slot_no, entry_time: @entry_time, exit_time: @exit_time, duration: @duration, amount: @amount }
+    {
+      car_reg_no: @car_reg_no,
+      slot_no: @slot_no,
+      entry_time: @entry_time,
+      exit_time: @exit_time,
+      duration: @duration,
+      amount: @amount
+    }
   end
 
   def self.init_file

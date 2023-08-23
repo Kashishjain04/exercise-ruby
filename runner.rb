@@ -56,7 +56,9 @@ def get_opt_parser
 
     opts.on("-i [invoice_id]", "--invoice", "Print invoice/s") do |invoice_id|
       parking_lot = ParkingLot.new
-      invoice_id.nil? ? parking_lot.print_all_invoices : parking_lot.print_invoice_by_id(Integer(invoice_id))
+      invoice_id.nil? ?
+        parking_lot.print_all_invoices :
+        parking_lot.print_invoice_by_id(Integer(invoice_id))
     end
 
     opts.on("-d slot_no", "--deactivate", "Mark a slot as inactive") do |slot_no|

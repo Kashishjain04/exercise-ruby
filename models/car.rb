@@ -17,7 +17,7 @@ class Car
     true
   end
 
-  def initialize(reg_no: , slot_no: nil, entry_time: Time.now)
+  def initialize(reg_no:, slot_no: nil, entry_time: Time.now)
     Car.is_valid? reg_no
 
     already = Car.already?(reg_no)
@@ -29,13 +29,13 @@ class Car
   end
 
   def self.already?(reg_no)
-    !(@@collection.index{ |item| item.reg_no == reg_no }.nil?)
+    !(@@collection.index { |item| item.reg_no == reg_no }.nil?)
   end
 
   def self.find(reg_no)
     Car.is_valid? reg_no
 
-    car = @@collection.find{ |car| car.reg_no == reg_no }
+    car = @@collection.find { |car| car.reg_no == reg_no }
     raise CarNotFound if car.nil?
 
     car
@@ -51,7 +51,11 @@ class Car
   end
 
   def self.initialize_from_hash(data)
-    Car.new(reg_no: data["reg_no"], slot_no: Integer(data["slot_no"]), entry_time: Time.parse(data["entry_time"]))
+    Car.new(
+      reg_no: data["reg_no"],
+      slot_no: Integer(data["slot_no"]),
+      entry_time: Time.parse(data["entry_time"])
+    )
   end
 
   def to_hash
