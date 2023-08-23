@@ -27,5 +27,4 @@ RSpec.describe ParkingLot do
       expect { parking_lot.unpark("AB12345678") }.to raise_error(CarNotFound)
     end
   end
-
 end

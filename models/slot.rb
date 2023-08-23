@@ -7,15 +7,16 @@ class Slot
   @@collection = []
   @@filename = "slots.json"
   @@max_slots = 10
-  attr_accessor :car_no, :slot_no
+  attr_accessor :car_no, :slot_no, :active
 
-  def initialize(slot_no:, car_no: nil)
+  def initialize(slot_no:, car_no: nil, active: true)
     @slot_no = slot_no
     @car_no = car_no
+    @active = active
   end
 
   def self.empty_slot
-    empty_slot = @@collection.find { |slot| slot.car_no.nil? }
+    empty_slot = @@collection.find { |slot| slot.car_no.nil? && slot.active }
     raise NoSlotAvailable, "Empty slot not available" if empty_slot.nil?
     empty_slot
   end
@@ -35,11 +36,11 @@ class Slot
   end
 
   def to_hash
-    { slot_no: @slot_no, car_no: @car_no }
+    { slot_no: @slot_no, car_no: @car_no, active: @active }
   end
 
   def self.initialize_from_hash(data)
-    Slot.new(slot_no: Integer(data["slot_no"]), car_no: data["car_no"])
+    Slot.new(slot_no: Integer(data["slot_no"]), car_no: data["car_no"], active: data["active"])
   end
 
   def self.init_file
@@ -49,5 +50,15 @@ class Slot
     end
 
     self.write_data(temp_slots)
+  end
+
+  def mark_inactive
+    raise SlotActive, "Slot not active" unless @active
+    @active = false
+  end
+
+  def mark_active
+    raise SlotActive, "Slot already active" if @active
+    @active = true
   end
 end

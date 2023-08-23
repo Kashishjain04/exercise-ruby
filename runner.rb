@@ -24,6 +24,9 @@ class Runner
 
   rescue InvoiceNotFound => e
     puts "Error: #{e}"
+
+  rescue SlotActive => e
+    puts "Error: #{e}"
   end
 end
 
@@ -56,6 +59,17 @@ def get_opt_parser
       invoice_id.nil? ? parking_lot.print_all_invoices : parking_lot.print_invoice_by_id(Integer(invoice_id))
     end
 
+    opts.on("-d slot_no", "--deactivate", "Mark a slot as inactive") do |slot_no|
+      parking_lot = ParkingLot.new
+      parking_lot.deactivate_slot(Integer(slot_no))
+      parking_lot.write_to_files
+    end
+
+    opts.on("-a slot_no", "--activate", "Mark a slot as inactive") do |slot_no|
+      parking_lot = ParkingLot.new
+      parking_lot.activate_slot(Integer(slot_no))
+      parking_lot.write_to_files
+    end
   end
 end
 

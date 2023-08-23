@@ -32,3 +32,9 @@ class InvoiceNotFound < StandardError
     super("Invoice not found")
   end
 end
+
+class SlotActive < StandardError
+  def initialize(msg)
+    super
+  end
+end

@@ -1,11 +1,12 @@
 require "json"
-require_relative '../models/slot'
-require_relative '../models/car'
-require_relative '../models/invoice'
-require_relative '../helpers/helper'
-require_relative '../utils/exceptions'
-require_relative '../views/car_view'
-require_relative '../views/invoice_view'
+require_relative "../models/slot"
+require_relative "../models/car"
+require_relative "../models/invoice"
+require_relative "../helpers/helper"
+require_relative "../utils/exceptions"
+require_relative "../views/car_view"
+require_relative "../views/invoice_view"
+require_relative "../views/slot_view"
 
 class ParkingLot
   include Helper
@@ -60,5 +61,17 @@ class ParkingLot
 
   def print_invoice_by_id(invoice_id)
     InvoiceView.print(Invoice.find(invoice_id))
+  end
+
+  def deactivate_slot(slot_no)
+    slot = Slot.find(slot_no)
+    slot.mark_inactive
+    SlotView.active(false)
+  end
+
+  def activate_slot(slot_no)
+    slot = Slot.find(slot_no)
+    slot.mark_active
+    SlotView.active(true)
   end
 end
