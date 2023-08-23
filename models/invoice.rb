@@ -4,6 +4,7 @@ require_relative '../helpers/model_helper'
 class Invoice
   extend ModelHelper
 
+  PRICE_MAPPING = { ..10 => 100, 11..30 => 200, 31..60 => 300, 61.. => 500 }
   @@collection = []
   @@filename = "invoices.json"
   attr_accessor :car_reg_no, :slot_no, :entry_time, :exit_time, :duration, :amount, :invoice_id
@@ -23,8 +24,7 @@ class Invoice
   end
 
   def calc_amount
-    price_mapping = { ..10 => 100, 11..30 => 200, 31..60 => 300, 61.. => 500 }
-    price_mapping.each { |range, value| return value if range === @duration }
+    PRICE_MAPPING.each { |range, value| return value if range === @duration }
   end
 
   def self.find(invoice_id)
