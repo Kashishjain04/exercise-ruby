@@ -20,8 +20,8 @@ class Slot
     empty_slot
   end
 
-  def self.find(&comp)
-    slot = @@collection.find { comp }
+  def self.find(slot_no)
+    slot = @@collection.find { |slot| slot.slot_no == slot_no }
     raise InvalidSlotId if slot.nil?
     slot
   end
@@ -34,11 +34,11 @@ class Slot
     self.car_no = nil
   end
 
-  def create_hash
+  def to_hash
     { slot_no: @slot_no, car_no: @car_no }
   end
 
-  def self.create_object_from_hash(data)
+  def self.initialize_from_hash(data)
     Slot.new(slot_no: Integer(data["slot_no"]), car_no: data["car_no"])
   end
 
@@ -48,6 +48,6 @@ class Slot
       temp_slots << Slot.new(slot_no: i)
     end
 
-    self.write_data_to_file(temp_slots)
+    self.write_data(temp_slots)
   end
 end

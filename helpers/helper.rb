@@ -20,10 +20,9 @@ module Helper
   end
 
   def write_to_files
-    Slot.write_data_to_file
-    Car.write_data_to_file
-    Invoice.write_data_to_file
+    Slot.write_data
+    Car.write_data
+    Invoice.write_data
     true
   end
-
 end

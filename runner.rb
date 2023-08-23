@@ -1,5 +1,5 @@
 require 'optparse'
-require_relative './models/parking_lot'
+require_relative './controllers//parking_lot_controller'
 require_relative './utils/exceptions'
 
 class Runner

@@ -1,5 +1,6 @@
 require_relative '../utils/exceptions'
 require_relative '../helpers/model_helper'
+require "time"
 
 class Car
   extend ModelHelper
@@ -10,12 +11,14 @@ class Car
 
   def self.is_valid?(reg_no)
     pattern = /^([A-Za-z]{2}[0-9]{8})$/
-    reg_no.match? pattern
+    match = reg_no.match? pattern
+    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless match
+
+    true
   end
 
   def initialize(reg_no: , slot_no: nil, entry_time: Time.now)
-    is_valid = Car.is_valid? reg_no
-    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
+    Car.is_valid? reg_no
 
     already = Car.already?(reg_no)
     raise CarAlreadyParked if already
@@ -30,10 +33,9 @@ class Car
   end
 
   def self.find(reg_no)
-    is_valid = Car.is_valid? reg_no
-    raise InvalidRegNo, "Registration number: #{reg_no} is invalid." unless is_valid
+    Car.is_valid? reg_no
 
-    car = @@collection.find(&:reg_no)
+    car = @@collection.find{ |car| car.reg_no == reg_no }
     raise CarNotFound if car.nil?
 
     car
@@ -48,37 +50,15 @@ class Car
     @@collection.delete_if { |item| item.object_id == self.object_id }
   end
 
-  def self.list
-    if @@collection.length == 0
-      puts <<END
------------------------------------------
-No car parked at the moment.
------------------------------------------
-END
-    else
-      @@collection.each { |item| item.print }
-    end
+  def self.initialize_from_hash(data)
+    Car.new(reg_no: data["reg_no"], slot_no: Integer(data["slot_no"]), entry_time: Time.parse(data["entry_time"]))
   end
 
-  def print
-    puts <<END
------------------------------------------
-Car Details
-    Registration Number: #{@reg_no}
-    Parking Slot: #{@slot_no}
------------------------------------------
-END
-  end
-
-  def self.create_object_from_hash(data)
-    Car.new(reg_no: data["reg_no"], slot_no: Integer(data["slot_no"]), entry_time: Time.new(data["entry_time"]))
-  end
-
-  def create_hash
+  def to_hash
     { reg_no: @reg_no, slot_no: @slot_no, entry_time: @entry_time }
   end
 
   def self.init_file
-    self.write_data_to_file([])
+    self.write_data([])
   end
 end

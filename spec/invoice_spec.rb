@@ -1,5 +1,4 @@
-require_relative '../models/invoice'
-require_relative '../models/parking_lot'
+require_relative './spec_helper'
 
 RSpec.describe Invoice do
   let(:invoice) { Invoice.new(car_reg_no: "AB12345678", slot_no: 3, entry_time: Time.now - 35, exit_time: Time.now) }
@@ -10,13 +9,5 @@ RSpec.describe Invoice do
 
   it "should calculate accurate amount" do
     expect(invoice.calc_amount).to be(300)
-  end
-
-  it "should print all invoices" do
-    parking_lot = ParkingLot.new
-    parking_lot.park("AB12345678")
-    parking_lot.unpark("AB12345678")
-
-    expect(parking_lot.print_all_invoices).to be_instance_of(Array)
   end
 end
