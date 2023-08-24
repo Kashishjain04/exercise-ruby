@@ -18,6 +18,11 @@ RSpec.configure do |config|
 
   config.before do
       allow(Helper).to receive(:safe_file)
+
+      allow(Car).to receive(:write_to_disk)
+      allow(Invoice).to receive(:write_to_disk)
+      allow(Slot).to receive(:write_to_disk)
+
       allow(Car).to receive(:read_from_disk).and_return([])
       allow(Slot).to receive(:read_from_disk).and_return([{ "slot_no" => 1, "active" => true },
                                                           { "slot_no" => 2, "active" => true },
