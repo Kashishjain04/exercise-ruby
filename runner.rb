@@ -37,8 +37,8 @@ class Runner
 
   private
 
-  def handle_write_option(&method)
-    method.call
+  def handle_write_option
+    yield
     @parking_lot.write_to_files
   end
 

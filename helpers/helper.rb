@@ -43,6 +43,5 @@ module Helper
     Slot.write_data
     Car.write_data
     Invoice.write_data
-    true
   end
 end
