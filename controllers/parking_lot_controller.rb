@@ -28,7 +28,6 @@ class ParkingLot
     new_car = Car.new(reg_no: reg_no)
     car = park_car(new_car)
 
-    write_to_files
     ParkingLotView.park(car.slot_no)
     true
   end
@@ -37,7 +36,6 @@ class ParkingLot
     new_car = Car.new(phone: phone)
     car = park_car(new_car)
 
-    write_to_files
     ParkingLotView.park(car.slot_no)
     true
   end
@@ -46,7 +44,6 @@ class ParkingLot
     car = Car.find(reg_no: reg_no)
     invoice = unpark_car(car)
 
-    write_to_files
     ParkingLotView.unpark(invoice.slot_no, invoice.invoice_id)
     print_invoice_by_id(invoice.invoice_id)
     true
@@ -56,7 +53,6 @@ class ParkingLot
     car = Car.find(phone: phone)
     invoice = unpark_car(car)
 
-    write_to_files
     ParkingLotView.unpark(invoice.slot_no, invoice.invoice_id)
     print_invoice_by_id(invoice.invoice_id)
     true
@@ -83,7 +79,6 @@ class ParkingLot
     slot = Slot.find(slot_no)
     slot.mark_inactive
 
-    write_to_files
     SlotView.active(false)
   end
 
@@ -91,13 +86,11 @@ class ParkingLot
     slot = Slot.find(slot_no)
     slot.mark_active
 
-    write_to_files
     SlotView.active(true)
   end
 
   def increase_slots(increment)
     Slot.increase_slots(increment)
-    write_to_files
     SlotView.added(increment)
   end
 end
