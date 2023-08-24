@@ -2,4 +2,8 @@
 
 source "https://rubygems.org"
 
-gem "rspec"
+gem "prawn"
+
+group :test do
+  gem "rspec"
+end

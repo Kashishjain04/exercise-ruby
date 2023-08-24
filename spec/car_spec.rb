@@ -1,14 +1,14 @@
 require_relative './spec_helper'
 
 RSpec.describe Car do
-  context "Registration number" do
+  describe "Registration number" do
     context "is valid if" do
       it "it contains exactly 2 alphabets followed by exactly 8 digits" do
         expect(Car.is_valid?("AB12345678")).to be_truthy
       end
 
       it "is a phone number having exactly 10 digits" do
-        expect(Car.new(id: "1111111111")).to be_instance_of(Car)
+        expect(Car.id_is_phone("1111111111")).to be_truthy
       end
     end
 
@@ -43,16 +43,22 @@ RSpec.describe Car do
     parking_lot = ParkingLot.new
     parking_lot.park("AB12345678")
     expect(Car.find("AB12345678")).to be_instance_of(Car)
+    parking_lot.unpark("AB12345678")
   end
 
   it "finds a parked car by phone number" do
     parking_lot = ParkingLot.new
     parking_lot.park("9876543210")
     expect(Car.find("9876543210")).to be_instance_of(Car)
+    parking_lot.unpark("9876543210")
+  end
+
+  it "does not find a non existent car" do
+    expect{Car.find("AB12345678")}.to raise_error(CarNotFound)
   end
 
   it "converts a car instance to hash and vice-versa" do
-    car = Car.new(id: "AB11111111")
+    car = Car.new(id: "AB12345678")
     hash = car.to_hash
     expect(Car.initialize_from_hash(hash))
       .to have_attributes(

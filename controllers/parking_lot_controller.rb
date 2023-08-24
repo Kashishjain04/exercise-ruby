@@ -67,6 +67,11 @@ class ParkingLot
     InvoiceView.print(Invoice.find(invoice_id))
   end
 
+  def print_invoice_to_file(invoice_id, format)
+    path = Invoice.find(invoice_id).print_to_file(format)
+    InvoiceView.saved_to(path)
+  end
+
   def deactivate_slot(slot_no)
     slot = Slot.find(slot_no)
     slot.mark_inactive

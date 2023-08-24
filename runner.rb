@@ -61,6 +61,21 @@ def get_opt_parser
         parking_lot.print_invoice_by_id(Integer(invoice_id))
     end
 
+    opts.on("-c invoice_id", "--csv", "Print invoice to csv file") do |invoice_id|
+      parking_lot = ParkingLot.new
+      parking_lot.print_invoice_to_file(Integer(invoice_id), "csv")
+    end
+
+    opts.on("-t invoice_id", "--txt", "Print invoice to text file") do |invoice_id|
+      parking_lot = ParkingLot.new
+      parking_lot.print_invoice_to_file(Integer(invoice_id), "txt")
+    end
+
+    opts.on("-p invoice_id", "--pdf", "Print invoice to pdf file") do |invoice_id|
+      parking_lot = ParkingLot.new
+      parking_lot.print_invoice_to_file(Integer(invoice_id), "pdf")
+    end
+
     opts.on("-d slot_no", "--deactivate", "Mark a slot as inactive") do |slot_no|
       parking_lot = ParkingLot.new
       parking_lot.deactivate_slot(Integer(slot_no))
