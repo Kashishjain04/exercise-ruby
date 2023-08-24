@@ -1,12 +1,11 @@
 require "time"
-require "csv"
-require "prawn"
 require_relative '../helpers/model_helper'
+require_relative '../services/file_handler'
 
 class Invoice
   extend ModelHelper
+  include FileHandler
 
-  INVOICES_DIR = "#{Dir.pwd}/invoices"
   PRICE_MAPPING = { ..10 => 100, 11..30 => 200, 31..60 => 300, 61.. => 500 }
   @@collection = []
   @@filename = "invoices.json"
@@ -68,7 +67,6 @@ class Invoice
   end
 
   def print_to_file(format)
-    Dir.mkdir(INVOICES_DIR) unless File.directory?(INVOICES_DIR)
     file_name = "invoice-##{invoice_id}.#{format}"
     path = "#{INVOICES_DIR}/#{file_name}"
 
@@ -111,20 +109,17 @@ Your Invoice: ##{@invoice_id}
       ["Car Registration Number", "Owner Phone Number", "Duration", "Entry Time", "Exit Time", "Amount"],
       [@car_reg_no || "N/A", @car_phone_no || "N/A", parse_duration, @entry_time, @exit_time, @amount]
     ]
-    File.write(path, rows.map(&:to_csv).join)
+    write_invoice_to_csv(rows, path)
     path
   end
 
   def print_to_txt(path)
-    File.write(path, text_content)
+    write_invoice_to_txt(text_content, path)
     path
   end
 
   def print_to_pdf(path)
-    car = self
-    Prawn::Document.generate(path) do
-      text car.text_content
-    end
+    write_invoice_to_pdf(text_content, path)
     path
   end
 end

@@ -58,6 +58,7 @@ class Slot
 
   def mark_inactive
     raise SlotActive, "Slot not active" unless @active
+    raise StandardError, "Can not deactivate already occupied slot" if @occupied
     @active = false
   end
 

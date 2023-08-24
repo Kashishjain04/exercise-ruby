@@ -1,10 +1,6 @@
 require_relative '../utils/exceptions'
-# require_relative "../models/slot"
-# require_relative "../models/invoice"
 
 module Helper
-  DIRNAME = "#{Dir.pwd}/data"
-
   def park_car(car)
     empty_slot = Slot.empty_slot
 
@@ -32,16 +28,12 @@ module Helper
   end
 
   def self.init_db
-    Dir.mkdir(DIRNAME) unless File.directory?(DIRNAME)
-
     Slot.init_file
     Car.init_file
     Invoice.init_file
   end
 
   def self.safe_file
-    Dir.mkdir(DIRNAME) unless File.directory?(DIRNAME)
-
     Slot.safe_file
     Car.safe_file
     Invoice.safe_file

@@ -31,7 +31,7 @@ class Runner
   rescue SlotActive => e
     puts "Error: #{e}"
 
-  rescue ArgumentError => e
+  rescue StandardError => e
     puts "Error: #{e}"
   end
 end
