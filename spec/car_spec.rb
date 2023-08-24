@@ -2,63 +2,89 @@ require_relative './spec_helper'
 
 RSpec.describe Car do
   describe "Registration number" do
-    context "is valid if" do
-      it "it contains exactly 2 alphabets followed by exactly 8 digits" do
-        expect(Car.is_valid?("AB12345678")).to be_truthy
-      end
-
-      it "is a phone number having exactly 10 digits" do
-        expect(Car.id_is_phone("1111111111")).to be_truthy
+    context "to be valid" do
+      it "should have exactly 2 alphabets followed by exactly 8 digits" do
+        expect(Car.is_valid_reg?("AB12345678")).to be_truthy
       end
     end
 
-    context "is invalid if" do
-      it "does not begin with 2 alphabets" do
-        expect { Car.is_valid?("12ASDF34") }.to raise_error(InvalidRegNo)
+    context "to be invalid" do
+      it "should not begin with 2 alphabets" do
+        expect { Car.is_valid_reg?("12ASDF34") }.to raise_error(InvalidRegNo)
       end
 
-      it "does not have 8 digits at end" do
-        expect { Car.is_valid?("AB1234ASDF") }.to raise_error(InvalidRegNo)
+      it "should not have 8 digits at end" do
+        expect { Car.is_valid_reg?("AB1234ASDF") }.to raise_error(InvalidRegNo)
       end
 
-      it "has length less than 10" do
-        expect { Car.is_valid?("AB1234") }.to raise_error(InvalidRegNo)
+      it "should be of length less than 10" do
+        expect { Car.is_valid_reg?("AB1234") }.to raise_error(InvalidRegNo)
       end
 
-      it "has length greater than 10" do
-        expect { Car.is_valid?("AB123456789") }.to raise_error(InvalidRegNo)
+      it "should be of length greater than 10" do
+        expect { Car.is_valid_reg?("AB123456789") }.to raise_error(InvalidRegNo)
       end
 
-      it "has a special character " do
-        expect { Car.is_valid?("AB123$5678") }.to raise_error(InvalidRegNo)
+      it "should have special characters " do
+        expect { Car.is_valid_reg?("AB123$5678") }.to raise_error(InvalidRegNo)
       end
 
-      it "has a whitespace " do
-        expect { Car.is_valid?("AB 123 5678") }.to raise_error(InvalidRegNo)
+      it "should have whitespaces " do
+        expect { Car.is_valid_reg?("AB 123 5678") }.to raise_error(InvalidRegNo)
+      end
+    end
+  end
+
+  describe "Phone number" do
+    context "to be valid" do
+      it "should have exactly 10 digits" do
+        expect(Car.is_valid_phone?("9876543210")).to be_truthy
+      end
+    end
+
+    context "to be invalid" do
+      it "should have alphabets" do
+        expect{Car.is_valid_phone?("9876543A10")}.to raise_error(InvalidPhoneNo)
+      end
+
+      it "should have whitespace" do
+        expect{Car.is_valid_phone?("9876543 10")}.to raise_error(InvalidPhoneNo)
+      end
+
+      it "should have special characters" do
+        expect{Car.is_valid_phone?("9876543@10")}.to raise_error(InvalidPhoneNo)
+      end
+
+      it "should be of length less than 10" do
+        expect{Car.is_valid_phone?("987654310")}.to raise_error(InvalidPhoneNo)
+      end
+
+      it "should be of length greater than 10" do
+        expect{Car.is_valid_phone?("98765431011")}.to raise_error(InvalidPhoneNo)
       end
     end
   end
 
   it "finds a parked car by registration number" do
     parking_lot = ParkingLot.new
-    parking_lot.park("AB12345678")
-    expect(Car.find("AB12345678")).to be_instance_of(Car)
-    parking_lot.unpark("AB12345678")
+    parking_lot.park_reg_no("AB12345678")
+    expect(Car.find(reg_no: "AB12345678")).to be_instance_of(Car)
+    parking_lot.unpark_reg_no("AB12345678")
   end
 
   it "finds a parked car by phone number" do
     parking_lot = ParkingLot.new
-    parking_lot.park("9876543210")
-    expect(Car.find("9876543210")).to be_instance_of(Car)
-    parking_lot.unpark("9876543210")
+    parking_lot.park_phone_no("9876543210")
+    expect(Car.find(phone: "9876543210")).to be_instance_of(Car)
+    parking_lot.unpark_phone_no("9876543210")
   end
 
   it "does not find a non existent car" do
-    expect{Car.find("AB12345678")}.to raise_error(CarNotFound)
+    expect{Car.find(reg_no: "AB12345678")}.to raise_error(CarNotFound)
   end
 
   it "converts a car instance to hash and vice-versa" do
-    car = Car.new(id: "AB12345678")
+    car = Car.new(reg_no: "AB12345678")
     hash = car.to_hash
     expect(Car.initialize_from_hash(hash))
       .to have_attributes(

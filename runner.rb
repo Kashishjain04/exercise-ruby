@@ -1,5 +1,5 @@
 require 'optparse'
-require_relative './controllers//parking_lot_controller'
+require_relative './controllers/parking_lot_controller'
 require_relative './utils/exceptions'
 
 class Runner
@@ -8,6 +8,9 @@ class Runner
     @parser.parse!
 
   rescue InvalidRegNo => e
+    puts "Error: #{e}"
+
+  rescue InvalidPhoneNo => e
     puts "Error: #{e}"
 
   rescue CarAlreadyParked => e
@@ -27,71 +30,70 @@ class Runner
 
   rescue SlotActive => e
     puts "Error: #{e}"
+
+  rescue ArgumentError => e
+    puts "Error: #{e}"
   end
 end
 
 def get_opt_parser
+  parking_lot = ParkingLot.new
   OptionParser.new do |opts|
 
     opts.on("-r", "--reset", "Reset parking lot data") do
       ParkingLot.init_db
     end
 
-    opts.on("-p reg_no", "--park", "Park your car") do |reg_no|
-      parking_lot = ParkingLot.new
-      parking_lot.park(reg_no.upcase)
-      parking_lot.write_to_files
+    opts.on("--park-reg REG_NO", "Park your car using registration number") do |reg_no|
+      parking_lot.park_reg_no(reg_no.upcase)
     end
 
-    opts.on("-u reg_no", "--unpark", "Find and unpark your car") do |reg_no|
-      parking_lot = ParkingLot.new
-      parking_lot.unpark(reg_no.upcase)
-      parking_lot.write_to_files
+    opts.on("--park-phone PHONE", "Park your car using phone number") do |phone|
+      parking_lot.park_phone_no(phone)
     end
 
-    opts.on("-l", "--list", "List all parked cars") do
-      parking_lot = ParkingLot.new
+    opts.on("--unpark-reg REG_NO", "Unpark your car using registration number") do |reg_no|
+      parking_lot.unpark_reg_no(reg_no.upcase)
+    end
+
+    opts.on("--unpark-phone PHONE", "Unpark your car using phone number") do |phone|
+      parking_lot.unpark_phone_no(phone)
+    end
+
+    opts.on("--list-cars", "List all parked cars") do
       parking_lot.list_cars
     end
 
-    opts.on("-i [invoice_id]", "--invoice", "Print invoice/s") do |invoice_id|
-      parking_lot = ParkingLot.new
-      invoice_id.nil? ?
-        parking_lot.print_all_invoices :
-        parking_lot.print_invoice_by_id(Integer(invoice_id))
+    opts.on("--list-invoices", "List all invoices") do
+      parking_lot.print_all_invoices
     end
 
-    opts.on("-c invoice_id", "--csv", "Print invoice to csv file") do |invoice_id|
-      parking_lot = ParkingLot.new
-      parking_lot.print_invoice_to_file(Integer(invoice_id), "csv")
+    opts.on("--list-invoice INVOICE_ID", Integer, "Show a particular invoice") do |invoice_id|
+      parking_lot.print_invoice_by_id(invoice_id)
     end
 
-    opts.on("-t invoice_id", "--txt", "Print invoice to text file") do |invoice_id|
-      parking_lot = ParkingLot.new
-      parking_lot.print_invoice_to_file(Integer(invoice_id), "txt")
+    opts.on("--print-csv INVOICE_ID", Integer, "Print invoice to csv file") do |invoice_id|
+      parking_lot.print_invoice_to_file(invoice_id, "csv")
     end
 
-    opts.on("-p invoice_id", "--pdf", "Print invoice to pdf file") do |invoice_id|
-      parking_lot = ParkingLot.new
-      parking_lot.print_invoice_to_file(Integer(invoice_id), "pdf")
+    opts.on("--print-txt INVOICE_ID", Integer, "Print invoice to txt file") do |invoice_id|
+      parking_lot.print_invoice_to_file(invoice_id, "txt")
     end
 
-    opts.on("-d slot_no", "--deactivate", "Mark a slot as inactive") do |slot_no|
-      parking_lot = ParkingLot.new
-      parking_lot.deactivate_slot(Integer(slot_no))
-      parking_lot.write_to_files
+    opts.on("--print-pdf INVOICE_ID", Integer, "Print invoice to pdf file") do |invoice_id|
+      parking_lot.print_invoice_to_file(invoice_id, "pdf")
     end
 
-    opts.on("-a slot_no", "--activate", "Mark a slot as inactive") do |slot_no|
-      parking_lot = ParkingLot.new
-      parking_lot.activate_slot(Integer(slot_no))
-      parking_lot.write_to_files
+    opts.on("--deactivate-slot SLOT_NO", Integer, "Mark a slot as inactive") do |slot_no|
+      parking_lot.deactivate_slot(slot_no)
     end
 
-    opts.on("-s increment", "Add slots") do |increment|
-      parking_lot = ParkingLot.new
-      parking_lot.increase_slots(Integer(increment))
-      parking_lot.write_to_files
+    opts.on("--activate-slot SLOT_NO", Integer, "Mark a slot as active") do |slot_no|
+      parking_lot.activate_slot(slot_no)
+    end
+
+    opts.on("--add-slots INCREMENT", Integer, "Add slots") do |increment|
+      parking_lot.increase_slots(increment)
     end
   end
 end

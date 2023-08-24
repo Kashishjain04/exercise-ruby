@@ -1,7 +1,35 @@
 require_relative '../utils/exceptions'
+# require_relative "../models/slot"
+# require_relative "../models/invoice"
 
 module Helper
   DIRNAME = "#{Dir.pwd}/data"
+
+  def park_car(car)
+    empty_slot = Slot.empty_slot
+
+    car.park(empty_slot.slot_no)
+    empty_slot.park
+
+    car
+  end
+
+  def unpark_car(car)
+    slot = Slot.find(car.slot_no)
+
+    invoice = Invoice.new(
+      car_reg_no: car.reg_no,
+      car_phone_no: car.phone,
+      slot_no: slot.slot_no,
+      entry_time: car.entry_time,
+      exit_time: Time.now.round
+    )
+
+    slot.unpark
+    car.unpark
+
+    invoice
+  end
 
   def self.init_db
     Dir.mkdir(DIRNAME) unless File.directory?(DIRNAME)

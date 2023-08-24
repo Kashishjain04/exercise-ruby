@@ -25,7 +25,7 @@ describe Slot do
     expect(Slot.initialize_from_hash(hash))
       .to have_attributes(
             slot_no: slot.slot_no,
-            car_id: slot.car_id,
+            occupied: slot.occupied,
             active: slot.active
           )
   end

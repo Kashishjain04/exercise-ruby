@@ -24,33 +24,40 @@ class ParkingLot
     Helper.init_db
   end
 
-  def park(id)
-    new_car = Car.new(id: id)
-    empty_slot = Slot.empty_slot
+  def park_reg_no(reg_no)
+    new_car = Car.new(reg_no: reg_no)
+    car = park_car(new_car)
 
-    new_car.park(empty_slot.slot_no)
-    empty_slot.park(id)
-
-    ParkingLotView.park(empty_slot.slot_no)
+    write_to_files
+    ParkingLotView.park(car.slot_no)
     true
   end
 
-  def unpark(id)
-    car = Car.find(id)
-    slot = Slot.find(car.slot_no)
+  def park_phone_no(phone)
+    new_car = Car.new(phone: phone)
+    car = park_car(new_car)
 
-    invoice = Invoice.new(
-      car_reg_no: car.reg_no,
-      car_phone_no: car.phone,
-      slot_no: slot.slot_no,
-      entry_time: car.entry_time,
-      exit_time: Time.now.round
-    )
+    write_to_files
+    ParkingLotView.park(car.slot_no)
+    true
+  end
 
-    slot.unpark
-    car.unpark
+  def unpark_reg_no(reg_no)
+    car = Car.find(reg_no: reg_no)
+    invoice = unpark_car(car)
 
-    ParkingLotView.unpark(car.slot_no, invoice.invoice_id)
+    write_to_files
+    ParkingLotView.unpark(invoice.slot_no, invoice.invoice_id)
+    print_invoice_by_id(invoice.invoice_id)
+    true
+  end
+
+  def unpark_phone_no(phone)
+    car = Car.find(phone: phone)
+    invoice = unpark_car(car)
+
+    write_to_files
+    ParkingLotView.unpark(invoice.slot_no, invoice.invoice_id)
     print_invoice_by_id(invoice.invoice_id)
     true
   end
@@ -75,17 +82,22 @@ class ParkingLot
   def deactivate_slot(slot_no)
     slot = Slot.find(slot_no)
     slot.mark_inactive
+
+    write_to_files
     SlotView.active(false)
   end
 
   def activate_slot(slot_no)
     slot = Slot.find(slot_no)
     slot.mark_active
+
+    write_to_files
     SlotView.active(true)
   end
 
   def increase_slots(increment)
     Slot.increase_slots(increment)
+    write_to_files
     SlotView.added(increment)
   end
 end
